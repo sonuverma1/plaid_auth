@@ -15,8 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
+from django.shortcuts import render
+from .views import Signup
+from django.conf.urls import url
+
+
+def mainPage(request):
+    return HttpResponse("Hello their")
+
 
 urlpatterns = [
+    path('home/', mainPage),
+    path('signup/', Signup.as_view()),
     path('admin/', admin.site.urls),
     path('auth/', include('rest_auth.urls')),
     path('auth/registration/', include('rest_auth.registration.urls')),

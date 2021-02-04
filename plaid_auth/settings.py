@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from .config import Settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'plaidapis',
+    'plaid_auth'
 
 ]
 
@@ -129,9 +131,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 SITE_ID = 1
-PLAID_CLIENT_ID = os.getenv('PLAID_CLIENT_ID')
-PLAID_SECRET = os.getenv('PLAID_SECRET')
-PLAID_PRODUCTS = os.getenv('PLAID_PRODUCTS')
-PLAID_COUNTRY_CODES = os.getenv('PLAID_COUNTRY_CODES')
-PLAID_ENV = os.getenv('PLAID_ENV')
+PLAID_CLIENT_ID = Settings['PLAID_CLIENT_ID']
+PLAID_SECRET = Settings['PLAID_SECRET']
+PLAID_PRODUCTS = Settings['PLAID_PRODUCTS']
+PLAID_COUNTRY_CODES = Settings['PLAID_COUNTRY_CODES']
+PLAID_ENV = Settings['PLAID_ENV']
 CELERY_BROKER_URL = 'amqp://localhost'
+# print("*****************")
+# print(Settings['PLAID_CLIENT_ID'])

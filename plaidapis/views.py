@@ -10,13 +10,44 @@ from plaid import Client
 # Create your views here.
 
 client = Client(client_id=settings.PLAID_CLIENT_ID,
-                secret=settings.PLAID_SECRET, environment=settings.PLAID_ENV)
+                secret=settings.PLAID_SECRET, environment='sandbox')
+
+
+class GetLinkToken:
+    try:
+        def get(self, request):
+            configs = {
+                'user': {
+                    'client_user_id': '123-test-user-id',
+                },
+                'products': ['auth', 'transactions'],
+                'client_name': "Plaid Test App",
+                'country_codes': ['US'],
+                'language': 'en',
+                'webhook': 'https://sample-webhook-uri.com',
+                'link_customization_name': 'default',
+                'account_filters': {
+                    'depository': {
+                        'account_subtypes': ['checking', 'savings'],
+                    },
+                },
+
+            }
+            response = client.LinkToken.create(configs)
+            link_token = response['link_token']
+            data = {'linl_token': link_token}
+            return Response(data, status=200)
+        except Exception as e:
+            data = {"message": str(e)}
+            return Response(data, status=400)
 
 
 class TokenExchange(APIView):
     def post(self, request):
         try:
-            public_token = request.data['public_token']
+            # public_token = request.data['public_token']
+            print(request)
+            public_token = getLink()
             response = client.Item.public_token.exchange(public_token)
             access_token = response['access_token']
             item_id = response['item_id']
