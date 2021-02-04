@@ -5,6 +5,7 @@ from .models import Log, TokenItem, Transaction
 from rest_framework.response import Response
 from .tasks import get_account_and_item_metadata
 from datetime import datetime, timedelta
+from rest_framework.permissions import IsAuthenticated
 
 from plaid import Client
 # Create your views here.
@@ -13,9 +14,15 @@ client = Client(client_id=settings.PLAID_CLIENT_ID,
                 secret=settings.PLAID_SECRET, environment='sandbox')
 
 
-class GetLinkToken:
-    try:
-        def get(self, request):
+def index(request):
+    return render(request, 'index.html', context={})
+
+
+class GetLinkToken(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
             configs = {
                 'user': {
                     'client_user_id': '123-test-user-id',
@@ -24,7 +31,7 @@ class GetLinkToken:
                 'client_name': "Plaid Test App",
                 'country_codes': ['US'],
                 'language': 'en',
-                'webhook': 'https://sample-webhook-uri.com',
+                'webhook': 'http://localost:8000/api/webhook',  # endpoint to my webhook
                 'link_customization_name': 'default',
                 'account_filters': {
                     'depository': {
@@ -35,7 +42,7 @@ class GetLinkToken:
             }
             response = client.LinkToken.create(configs)
             link_token = response['link_token']
-            data = {'linl_token': link_token}
+            data = {'link_token': link_token}
             return Response(data, status=200)
         except Exception as e:
             data = {"message": str(e)}
@@ -43,11 +50,13 @@ class GetLinkToken:
 
 
 class TokenExchange(APIView):
+    # permission_classes = [IsAuthenticated]
+
     def post(self, request):
         try:
-            # public_token = request.data['public_token']
-            print(request)
-            public_token = getLink()
+            public_token = request.data['public_token']
+            # print(request)
+            # public_token = getLink()
             response = client.Item.public_token.exchange(public_token)
             access_token = response['access_token']
             item_id = response['item_id']
@@ -56,8 +65,8 @@ class TokenExchange(APIView):
             res = {'access_token': access_token,
                    'item_id': item_id, "request_id": request_id}
             Log.objects.create(request=req, response=res)
-            TokenExchange.create(access_token=access_token,
-                                 item_id=item_id, user=request.user)
+            TokenItem.objects.create(access_token=access_token,
+                                     item_id=item_id, user=request.user)
             data = {'message': "Token exchange successfully"}
             get_account_and_item_metadata.delay(res)
             return Response(data, status=200)
@@ -68,6 +77,8 @@ class TokenExchange(APIView):
 
 
 class FetchTransaction(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         try:
             start_date = request.data['start_date']
@@ -98,6 +109,8 @@ class FetchTransaction(APIView):
 
 
 class Webhook(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         try:
             item_id = request.data['item_id']
