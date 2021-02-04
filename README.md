@@ -16,3 +16,34 @@ user.
 ## Models
 
 ![Models](https://i.ibb.co/m6ybhSx/models.png)
+
+
+User: To store user login info
+TokenIten: To store Access_token and Item_id info
+Log: To store every activity log
+Transactions: To store transactions info from Plaid API
+Items: To store info of each Items
+Account: To store bank account info
+
+## REST APIs
+
+### auth/registration/: 
+To register a user
+
+### auth/login:
+To login a user
+
+### auth/logout:
+To logout already logged-in user
+
+### api/linktoken:
+-> To get link_token for logged-in user
+
+### api/tokenexchange:
+->exchange public_token to get access_token
+
+### api/fetchtrasaction:
+-> Fetch transaction of loggedIn user
+
+### api/webhook:
+-> Exposed webhook api for handling plaid transactions
