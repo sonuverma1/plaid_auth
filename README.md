@@ -1,5 +1,5 @@
 # plaid_auth
-##Objective
+## Objective
 Create a project in django rest framework and celery with following APIs exposed:
 1) User signup, login , logout APIs
 2) Token exchange API : An authenticated user can submit a plaid public token that
@@ -13,5 +13,6 @@ user.
 5) Do appropriate plaid error handling
 
 
-##Models
+## Models
+
 ![Models](https://i.ibb.co/m6ybhSx/models.png)
