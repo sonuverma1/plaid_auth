@@ -50,13 +50,11 @@ class GetLinkToken(APIView):
 
 
 class TokenExchange(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         try:
             public_token = request.data['public_token']
-            # print(request)
-            # public_token = getLink()
             response = client.Item.public_token.exchange(public_token)
             access_token = response['access_token']
             item_id = response['item_id']
