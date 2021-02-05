@@ -58,7 +58,11 @@ To logout already logged-in user
 
 ## How to use
 step 1) Create a config.py file in plaid_auth directory and create a Setting object having plaid credentials as its properties
+
 step 2) Install all the required dependecies from requirements.txt
+
 step 3) Run the program and goto signup/login api to create/login your account
+
 step 4) Go to api/ url to start the plaid auth flow for getting access token for one item
+
 step 5) Goto fetchtransaction/url to fetch all the transactions between a start time and time
