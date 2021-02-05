@@ -19,10 +19,15 @@ user.
 
 
 User: To store user login info
+
 TokenIten: To store Access_token and Item_id info
+
 Log: To store every activity log
+
 Transactions: To store transactions info from Plaid API
+
 Items: To store info of each Items
+
 Account: To store bank account info
 
 ## REST APIs
